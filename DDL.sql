@@ -153,3 +153,55 @@ DROP TABLE publisher CASCADE CONSTRAINTS;
 
 --참조되지 않는 테이블
 DROP TABLE product;
+
+
+-----------------------------------------------------------------------------
+/*
+    시퀀스
+    데이터베이스 객체로 유일한 값으로 일련번호 생성
+    지정된 수치로 증가하거나 감소
+    기본키 값을 일련번호로 자동 생성할 때 사용
+    최대 15개까지 생성 가능
+    테이블과 독립적으로 저장되고 생성
+    하나의 시퀀스를 여러 테이블에서 사용 가능
+    
+    CREATE SEQUENCE 시퀀스명
+    START WITH 시작값
+    INCREMENT BY 증가값
+    MAXVALUE 최대값
+    MINVALUE 최소값
+    CYCLE/NOCYCLE;
+
+*/
+
+CREATE SEQUENCE NO_SEQ
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 10000
+    NOCYCLE;
+
+/* 현재 시퀀스 값 검색 : 현재까지 사용한 시퀀스 값 반환
+    SELECT NO_SEQ.CURRVAL
+    FROM dual;
+    사용해야함
+*/
+
+SELECT NO_SEQ.CURRVAL FROM dual;
+    
+-- 시퀀스 수정: 구조 수정(객체 수정이므로 ALTER)
+ALTER SEQUENCE NO_SEQ
+    MAXVALUE 1000;
+    
+-- 시퀀스 구조 속성 검색(ALTER로 수정한 구조 속성 확인)
+-- USER_SEQUENCES : SYSTEM TABLE 활용(일반 사용자 검색 권한 있음)
+
+SELECT * FROM USER_SEQUENCES;
+
+-- 시퀀스 삭제
+DROP SEQUENCE NO_SEQ;
+
+-- 시퀀스 삭제 결과 확인
+SELECT SEQUENCE_NAME FROM USER_SEQUENCES;
+
+-- SELECT는 반환되는 레코드가 없어도 빈객체를 반환함
