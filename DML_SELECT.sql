@@ -289,3 +289,69 @@ SELECT bookNo AS 도서번호, bookName AS 도서명, bookPrice AS 도서가격,
 FROM book;
 
 -- SELECT 결과에 연산이 포함되거나 컬럼명이 너무 길어서 복잡하면 별명을 활용
+
+------------------------------------------------------------------
+
+/*
+    SUM() : 합계
+    AVG() : 평균
+    COUNT() : 선택된 열의 행 수(널 값은 제외)
+    COUNT(*) : 전체 행의 수
+    MAX() : 최대
+    MIN() : 최소
+*/
+
+-- SUM() : 합계
+
+-- 도서 테이블에서 총 재고수량 계산하여 검색
+-- 반환 결과가 테이블(객체) : 컬럼명 반드시 필요
+-- 컬럼명이 연산식(함수식)
+SELECT SUM(bookStock)
+FROM book;
+
+-- 컬럼명 별명 사용
+-- 공백문자 포함하여 반드시 "" 사용
+SELECT SUM(bookStock) AS "SUM OF BOOKSTOCK"
+FROM book;
+
+-- 한글 별명 O
+SELECT SUM(bookStock) AS "총 재고 수량"
+FROM book;
+
+-- 띄어쓰기 없으면 "" 생략 가능
+SELECT SUM(bookStock) AS 총재고수량
+FROM book;
+
+-- 도서 판매 테이블에서 고객 번호가 2인 호날두가 주문한 도서의 총 주문수량 계산하여 출력
+-- ORA-00937 : 단일 그룹의 그룹 함수가 아닙니다(not a single-group group function) : clientNo가 집계함수의 결과가 아니다
+-- select에서 집계함수 이용 시 다른 컬럼도 집계함수 사용하거나 사용하지 말아야 함
+/* 
+SELECT SUM(bsQty) AS "총 주문수량", clientNo
+FROM bookSale
+WHERE clientNo = '2';
+*/
+
+-- 도서 판매 테이블에서 최대/최소 판매수량을 검색
+-- SELECT 집계 함수를 사용한 컬럼들의 나열은 가능
+
+SELECT MAX(bsQty) AS "최대주문량", MIN(bsQty) "최소주문량"
+FROM bookSale;
+
+-- 도서 테이블에서 도서의 집계량 검색
+SELECT SUM(bookPrice) AS 가격총액,
+       AVG(bookPrice) AS 가격평균,
+       MAX(bookPrice) AS 최대가격,
+       MIN(bookPrice) AS 최소가격
+FROM book;
+
+-- COUNT() : NULL값은 제외 후 데이터의 수를 반환
+-- COUNT(*) : 테이블 레코드를 개수 / COUNT(컬럼 명)
+-- * : 테이블의 모든 레코드
+-- 컬럼명 : 컬럼의 데이터
+
+SELECT COUNT(*) AS 총고객수 FROM client;
+
+-- NULL 값을 포함하고 있는 컬럼 대상으로 고객수를 계산하면 잘못된 결과가 나올 수 있음
+-- *를 사용하는 게 안전함
+SELECT COUNT(clientHobby) AS 총고객수 FROM client; -- 별명의 의미가 잘못됨
+SELECT COUNT(clientHobby) AS "취미 데이터를 제공한 고객 수" FROM client;
